@@ -1,20 +1,20 @@
-from django.shortcuts import render
-from .models import Post
+#jquery
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 
-#실습1
-def post_list(request):
-    return render(request, 'blog/post_list.html', {})
 
-#실습2
-def test(request):
-    post_list = Post.objects.all()
-    return render(request, 'blog/test.html', {
-        'post_list' : post_list,
-    })
+class SignUpView(CreateView):
+    template_name = 'blog/signup.html'
+    form_class = UserCreationForm
 
-def post_detail(request, pk):
-    post = Post.objects.get(pk=pk) # 페이지 찾지 못하면 Post.DeseNotExist 500error
-    return render(request, 'blog/post_detail.html', {
-        'post' : post,
-    })
+def validate_username(request):
+    username = request.GET.get('username', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    if data['is_taken']:
+        data['error_message'] = 'A user with this username already exists.'
+    return JsonResponse(data)

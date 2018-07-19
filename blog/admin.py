@@ -1,8 +1,15 @@
 from django.contrib import admin
-from .models import Post
 
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title')
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 
-admin.site.register(Post, PostAdmin)
+
+# admin.site.register(Post, PostAdmin)
+# class PostAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'title')
+
+
+# Re-register UserAdmin
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 # Register your models here.
